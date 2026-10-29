@@ -11,7 +11,7 @@
 <footer>Kilder: Urbanos Almuñécar, ALSA og publisert linje 1-kart. Kontroller rutetider hos operatøren før avreise.</footer></main>
 <nav class="bottom" aria-label="Hovedmeny"><button data-page="home" class="active" onclick="navigate('home')"><b>⌂</b>Hjem</button><button data-page="lines" onclick="navigate('lines')"><b>🚌</b>Linjer</button><button data-page="search" onclick="navigate('search')"><b>🔎</b>Reisesøk</button><button data-page="prices" onclick="navigate('prices')"><b>€</b>Priser</button><button data-page="favorites" onclick="navigate('favorites')"><b>☆</b>Favoritter</button></nav>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
-const urban='https://urbanosalmunecar.es/';const lines=[{id:'1',name:'Sentrum – San Cristóbal – Cotobro',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/almunecar-circular-linea-1-invierno/'},{id:'2A',name:'Almuñécar – La Herradura',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/la-herradura-linea-2-invierno/'},{id:'2B',name:'La Herradura – Punta de la Mona',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/la-herradura-linea-2-invierno/'},{id:'3A',name:'Velilla – Taramay',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/velilla-taramay-invierno/'},{id:'5',name:'Torrecuevas (også omtalt som linje 4)',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/torrecuevas-linea-5-invierno/'},{id:'Nerja',name:'Almuñécar – Nerja',kind:'ALSA',url:'https://www.alsa.com/en/coach/almunecar-nerja'},{id:'Málaga',name:'Almuñécar – Málaga',kind:'ALSA',url:'https://www.alsa.com/'},{id:'Granada',name:'Almuñécar – Granada',kind:'ALSA',url:'https://www.alsa.com/'},{id:'Motril',name:'Almuñécar – Motril',kind:'ALSA',url:'https://www.alsa.com/'}];
+const urban='https://urbanosalmunecar.es/';const lines=[{id:'1',name:'Sentrum – San Cristóbal – Cotobro',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/almunecar-circular-linea-1-invierno/'},{id:'2A',name:'Almuñécar – La Herradura',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/la-herradura-linea-2-invierno/'},{id:'2B',name:'Almuñécar – La Herradura – Punta de la Mona',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/la-herradura-linea-2-invierno/'},{id:'3A',name:'Velilla – Taramay',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/velilla-taramay-invierno/'},{id:'5',name:'Torrecuevas (linje 5 vinter / 4 sommer)',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/torrecuevas-linea-5-invierno/'},{id:'Nerja',name:'Almuñécar – Nerja',kind:'ALSA',url:'https://www.alsa.com/en/coach/almunecar-nerja'},{id:'Málaga',name:'Almuñécar – Málaga',kind:'ALSA',url:'https://www.alsa.com/'},{id:'Granada',name:'Almuñécar – Granada',kind:'ALSA',url:'https://www.alsa.com/'},{id:'Motril',name:'Almuñécar – Motril',kind:'ALSA',url:'https://www.alsa.com/'}];
 const stops=['Plaza de la Carrera','Plaza de Madrid','Paseo del Altillo','Peñón del Santo','Hotel Almuñécar Playa','Hotel Helios','Mar del Sol','Chinasol','Rinconcillo Jr / Rincón de la China','Los Ramos','Hotel Cotobro / Playa de Cotobro','Los Ramos (retur)','Rincón de la China (retur)','Chinasol (retur)','Los Marinos','Puente de Noy 1','Puente de Noy 2','Costa Banana (retur)','Albaicín del Mar (retur)','Avenida Costa del Sol (retur)','Plaza de la Carrera'];
 const areas={
  '2A':['Almuñécar busstasjon','La Herradura sentrum'],
@@ -19,48 +19,106 @@ const areas={
  '3A':['Almuñécar sentrum','Playa de Velilla','Taramay'],
  '5':['Almuñécar sentrum','Torrecuevas']
 };
-// Route-area map: only OSM-mapped bus stops are shown, NOT verified line membership.
+// OpenStreetMap: use documented route relations when available; never join unrelated roads.
 const routeRegions={
- '1':{label:'Cotobro / San Cristóbal',lat:36.7335,lon:-3.7020,radius:2500},
- '2A':{label:'La Herradura',lat:36.7350,lon:-3.7390,radius:2200},
- '2B':{label:'Punta de la Mona / La Herradura',lat:36.7285,lon:-3.7415,radius:2200},
- '3A':{label:'Velilla / Taramay',lat:36.7410,lon:-3.6675,radius:2200},
- '5':{label:'Torrecuevas',lat:36.7550,lon:-3.6890,radius:2200}
+ '1':{label:'Cotobro / San Cristóbal',lat:36.7335,lon:-3.7020,radius:2800},
+ '2A':{label:'Almuñécar / La Herradura',lat:36.7335,lon:-3.7210,radius:5100},
+ '2B':{label:'Almuñécar / Punta de la Mona',lat:36.7335,lon:-3.7210,radius:5100},
+ '3A':{label:'Velilla / Taramay',lat:36.7410,lon:-3.6675,radius:2700},
+ '5':{label:'Torrecuevas',lat:36.7500,lon:-3.6890,radius:3000}
 };
-let activeRouteMap=null,routeMarkers=[];
+let activeRouteMap=null,routeRequest=0;
 function directionsTo(lat,lon){return 'https://www.google.com/maps/dir/?api=1&destination='+lat+','+lon+'&travelmode=walking'}
-function showRouteMap(id){
+const osmServers=['https://overpass.private.coffee/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.nchc.org.tw/api/interpreter'];
+async function osmFetch(query){
+ let last;
+ for(const endpoint of osmServers){
+  const c=new AbortController(),timer=setTimeout(()=>c.abort(),13000);
+  try{
+   const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(query),signal:c.signal});
+   if(!response.ok)throw Error('HTTP '+response.status);
+   const data=await response.json();
+   if(!Array.isArray(data.elements))throw Error('Ugyldig kartdata');
+   return data.elements;
+  }catch(e){last=e}finally{clearTimeout(timer)}
+ }
+ throw last||Error('Ingen karttjeneste tilgjengelig');
+}
+async function showRouteMap(id){
  const region=routeRegions[id],el=document.getElementById('routeMap'),status=document.getElementById('routeMapStatus'),list=document.getElementById('routeStops');
  if(!region||!el)return;
+ const request=++routeRequest;
  if(activeRouteMap){activeRouteMap.remove();activeRouteMap=null}
- if(typeof L==='undefined'){status.textContent='Kartbiblioteket kunne ikke lastes. Kontroller internettforbindelsen.';return}
- activeRouteMap=L.map(el,{scrollWheelZoom:false}).setView([region.lat,region.lon],13);
- L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap-bidragsytere',maxZoom:19}).addTo(activeRouteMap);
- L.circle([region.lat,region.lon],{radius:region.radius,color:'#1595a6',weight:1,fillOpacity:.03,interactive:false}).addTo(activeRouteMap);
- status.textContent='Henter kartlagte bussholdeplasser i området…';list.innerHTML='';
- setTimeout(()=>{if(activeRouteMap)activeRouteMap.invalidateSize()},150);
- const q='[out:json][timeout:22];(node["highway"="bus_stop"](around:'+region.radius+','+region.lat+','+region.lon+');node["public_transport"="platform"](around:'+region.radius+','+region.lat+','+region.lon+'););out body;';
- const controller=new AbortController();setTimeout(()=>controller.abort(),27000);
- fetch('https://overpass.kumi.systems/api/interpreter?data='+encodeURIComponent(q),{signal:controller.signal})
- .then(r=>{if(!r.ok)throw Error('Tjenesten svarer ikke');return r.json()})
- .then(data=>{
-   if(!document.getElementById('routeMap')||!activeRouteMap)return;
-   const seen=new Set();let stops=(data.elements||[]).filter(x=>x.lat&&x.lon).filter(x=>{let k=x.id;if(seen.has(k))return false;seen.add(k);return true});
-   stops.sort((a,b)=>distanceMeters(region.lat,region.lon,a.lat,a.lon)-distanceMeters(region.lat,region.lon,b.lat,b.lon));
-   const bounds=[];
-   stops.forEach((stop,i)=>{
-     const name=stop.tags?.name||stop.tags?.['name:es']||'Bussholdeplass uten navn';
-     const route=stop.tags?.route_ref||stop.tags?.ref||'';
-     const link=directionsTo(stop.lat,stop.lon);
-     const marker=L.circleMarker([stop.lat,stop.lon],{radius:7,color:'#fff',weight:2,fillColor:'#087cbb',fillOpacity:1}).addTo(activeRouteMap);
-     marker.bindPopup('<b>'+safe(name)+'</b><br><small>OSM-registrert holdeplass – linjetilhørighet ikke kontrollert'+(route?'<br>Merking: '+safe(route):'')+'</small><br><a target="_blank" rel="noopener" href="'+link+'">Gå hit i Google Maps ↗</a>');
-     bounds.push([stop.lat,stop.lon]);
-     if(i<60){let btn=document.createElement('button');btn.textContent=(i+1)+'. '+name+(route?' ('+route+')':'');btn.addEventListener('click',()=>{activeRouteMap.setView([stop.lat,stop.lon],16);marker.openPopup();el.scrollIntoView({behavior:'smooth',block:'center'})});list.appendChild(btn)}
-   });
-   status.textContent=stops.length+' kartlagte holdeplasser funnet i området. De er ikke bekreftet som stopp på akkurat denne linjen.';
-   if(stops.length&&bounds.length)activeRouteMap.fitBounds(bounds,{padding:[25,25],maxZoom:14});
-   if(!stops.length)list.textContent='Ingen holdeplasser funnet i åpne kartdata.';
- }).catch(()=>{status.textContent='Kunne ikke hente holdeplassdata nå. Prøv igjen senere. Kartgrunnlaget kan fortsatt brukes.'});
+ if(typeof L==='undefined'){status.textContent='Kartbiblioteket kunne ikke lastes. Sjekk internettforbindelsen.';return}
+ const map=L.map(el,{scrollWheelZoom:false}).setView([region.lat,region.lon],12);
+ activeRouteMap=map;
+ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);
+ setTimeout(()=>{if(request===routeRequest)map.invalidateSize()},150);
+ status.textContent='Søker etter bussholdeplasser og registrert bussrute …';
+ list.innerHTML='';
+ const query='[out:json][timeout:20];(node["highway"="bus_stop"](around:'+region.radius+','+region.lat+','+region.lon+');node["public_transport"="platform"](around:'+region.radius+','+region.lat+','+region.lon+'););out body;';
+ const routeQuery='[out:json][timeout:20];relation["type"="route"]["route"="bus"](around:'+region.radius+','+region.lat+','+region.lon+');out tags geom;';
+ const bounds=[];
+ let matchedStops=new Set();
+ try{
+  const routes=await osmFetch(routeQuery);
+  if(request!==routeRequest)return;
+  const matching=routes.filter(r=>{
+   const tags=r.tags||{},refs=(tags.ref||'').split(/[;, ]+/),name=(tags.name||'').toLowerCase();
+   return refs.includes(id)||(id==='5'&&refs.includes('4'))||(!tags.ref&&name.includes('línea '+id));
+  });
+  let roadCount=0;
+  for(const route of matching){
+   const members=route.members||[];
+   for(const member of members){
+    if(member.type==='node'&&/stop|platform/i.test(member.role||''))matchedStops.add(member.ref);
+    if(member.type!=='way'||!Array.isArray(member.geometry)||member.geometry.length<2)continue;
+    const coords=member.geometry.filter(p=>Number.isFinite(p.lat)&&Number.isFinite(p.lon)).map(p=>[p.lat,p.lon]);
+    if(coords.length<2)continue;
+    L.polyline(coords,{color:'#d32952',weight:5,opacity:.9}).addTo(map);
+    roadCount++;
+    bounds.push(...coords);
+   }
+  }
+  if(roadCount)status.textContent='Rosa veistrekninger er hentet fra '+matching.length+' OpenStreetMap-ruter merket '+id+'. Kjøreretning og fullstendighet er ikke verifisert mot operatøren.';
+  else status.textContent='Ingen dokumentert veitrase for denne linjen funnet i åpne kartdata. Viser registrerte holdeplasser der de finnes.';
+ }catch(e){
+  if(request!==routeRequest)return;
+  status.textContent='Kunne ikke hente registrert busstrase. Prøver å hente holdeplasser.';
+ }
+ try{
+  const elements=await osmFetch(query);
+  if(request!==routeRequest)return;
+  const unique=new Map();
+  for(const x of elements){
+   if(!Number.isFinite(x.lat)||!Number.isFinite(x.lon))continue;
+   const key=x.lat.toFixed(5)+','+x.lon.toFixed(5);
+   if(!unique.has(key))unique.set(key,x);
+  }
+  const stops=[...unique.values()].sort((a,b)=>distanceMeters(region.lat,region.lon,a.lat,a.lon)-distanceMeters(region.lat,region.lon,b.lat,b.lon));
+  stops.forEach((stop,i)=>{
+   const name=stop.tags?.name||stop.tags?.['name:es']||'Bussholdeplass uten navn';
+   const confirmed=matchedStops.has(stop.id);
+   const marker=L.circleMarker([stop.lat,stop.lon],{radius:confirmed?9:7,color:'#fff',weight:2,fillColor:confirmed?'#0b865a':'#087cbb',fillOpacity:1}).addTo(map);
+   const link=directionsTo(stop.lat,stop.lon);
+   marker.bindPopup('<b>'+safe(name)+'</b><br><small>'+(confirmed?'Tilknyttet OSM-ruterelasjon – ikke kontrollert mot operatøren':'Kartlagt stopp i området – ikke bekreftet for denne linjen')+'</small><br><a target="_blank" rel="noopener" href="'+link+'">Gå hit i Google Maps ↗</a>');
+   bounds.push([stop.lat,stop.lon]);
+   if(i<100){
+    const btn=document.createElement('button');
+    btn.textContent=(confirmed?'● ':'○ ')+name;
+    btn.addEventListener('click',()=>{map.setView([stop.lat,stop.lon],16);marker.openPopup();el.scrollIntoView({behavior:'smooth',block:'center'})});
+    list.appendChild(btn);
+   }
+  });
+  status.textContent+=' '+stops.length+' kartlagte holdeplasser i søkeområdet.';
+  if(!stops.length)list.textContent='Ingen holdeplasser funnet i kartdatabasen for dette området.';
+  if(bounds.length)map.fitBounds(bounds,{padding:[20,20],maxZoom:13});
+ }catch(e){
+  if(request!==routeRequest)return;
+  status.textContent+=' Holdeplassdata kunne ikke lastes fra karttjenestene. Bruk operatørens offisielle rutekart nedenfor.';
+  list.innerHTML='<p class="warning">Karttjenestene svarte ikke. Dette betyr ikke at ruten mangler holdeplasser.</p>';
+  if(bounds.length)map.fitBounds(bounds,{padding:[20,20],maxZoom:13});
+ }
 }
 function mapsSearch(place){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(place+', Almuñécar, Granada, España')}
 function stopLink(place){return `<button class="stopbutton" onclick="showStop(${JSON.stringify(place).replace(/"/g,'&quot;')})">📍 ${safe(place)} · vis på kart ↗</button>`}
@@ -71,7 +129,8 @@ function openLine(id){
  document.getElementById('detailHead').innerHTML=`<span class="badge">${safe(l.kind)}</span><h2 style="margin-top:9px">Linje ${safe(l.id)}: ${safe(l.name)}</h2><button class="action light" onclick="toggleFav('${l.id}')">${saved.includes(l.id)?'★ Fjern favoritt':'☆ Lagre favoritt'}</button>`;
  let html='';
  if(l.kind==='Lokalbuss'){
- html+=`<h2>🗺️ Kart og holdeplasser</h2><p class="muted">Blå prikker viser bussholdeplasser registrert i OpenStreetMap nær linjens område. Kartet bekrefter <b>ikke</b> hvilke holdeplasser den valgte linjen faktisk betjener.</p><div id="routeMap" class="route-map" role="region" aria-label="Holdeplasskart"></div><div id="routeMapStatus" class="route-map-status">Laster kart…</div><div class="map-legend">Trykk på en blå prikk for navn og gangveibeskrivelse. Ingen uverifisert rutestrek er tegnet.</div><div id="routeStops" class="stop-results"></div><button class="action light" onclick="showRouteMap(current)">↻ Oppdater holdeplasser</button>`;
+ html+=`<h2>🗺️ Kart og holdeplasser</h2><p class="muted">Blå prikker er kartlagte holdeplasser i området, ikke nødvendigvis stopp på linjen. Grønne prikker er knyttet til en OSM-ruterelasjon. Rosa veistrekninger vises bare dersom en merket bussrute finnes i kartdata.</p><div id="routeMap" class="route-map" role="region" aria-label="Holdeplasskart"></div><div id="routeMapStatus" class="route-map-status">Laster kart…</div><div class="map-legend">Trykk på en prikk for navn og gangvei. Ingen rette linjer mellom holdeplasser tegnes. Kartdata er ikke offisielt verifisert.</div><div id="routeStops" class="stop-results"></div><button class="action light" onclick="showRouteMap(current)">↻ Oppdater holdeplasser</button>`;
+ html+=`<p class="warning"><b>Offisielt rutekart:</b> Sjekk kjørevei, retning, holdeplasser og eventuelle avvik hos busselskapet. ${external(l.url,'Se offisielt rutekart og tider')}</p>`;
  if(id==='1')html+=`<iframe class="map" loading="lazy" title="Publisert linje 1-kart" src="https://www.google.com/maps/d/embed?mid=19WIkbQbOUD_ohMP90vEVLytbaILtH1bw"></iframe>${external('https://www.google.com/maps/d/viewer?mid=19WIkbQbOUD_ohMP90vEVLytbaILtH1bw','Åpne publisert linje 1-kart')}<div class="warning">Omkjøring via Calle Guadix er meldt av operatøren. Kartet kan vise ordinær trasé.</div>`;
  else html+=`<div class="warning">Detaljert holdeplassliste og GPS-posisjoner for denne linjen er ikke verifisert. Punktene nedenfor er <b>områder langs forbindelsen</b>, ikke en komplett holdeplassliste. Ingen oppdiktet trasé tegnes.</div>`;
  const entries=id==='1'?stops:areas[id]||[];
