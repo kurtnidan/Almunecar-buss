@@ -8,7 +8,7 @@
 <section id="detail" class="page hidden"><button class="action light" onclick="navigate('lines')">← Alle linjer</button><div class="card"><div id="detailHead"></div><div id="detailBody"></div></div></section>
 <section id="search" class="page hidden"><div class="card"><h2>🔎 Finn buss</h2><p class="muted">Enkel forbindelseoversikt, ikke en reiseplanlegger med live avganger eller bytter.</p><label for="origin">Fra</label><select id="origin"><option>Almuñécar sentrum</option><option>San Cristóbal</option><option>Cotobro</option><option>La Herradura</option><option>Velilla</option><option>Taramay</option><option>Torrecuevas</option></select><label for="destination">Til</label><select id="destination"><option>Cotobro</option><option>Almuñécar sentrum</option><option>San Cristóbal</option><option>La Herradura</option><option>Velilla</option><option>Taramay</option><option>Torrecuevas</option><option>Nerja</option><option>Málaga</option><option>Granada</option><option>Motril</option></select><button class="action" onclick="findRoute()">Finn forbindelse</button><div id="routeResult"></div></div></section>
 <section id="favorites" class="page hidden"><div class="card"><h2>⭐ Lagrede linjer</h2><div id="favesList"></div></div></section>
-<footer>Kilder: Urbanos Almuñécar, ALSA og publisert linje 1-kart. Kontroller rutetider hos operatøren før avreise.</footer></main>
+<footer>Kilder: Operatørens offisielle vinterdiagrammer (Urbanos Almuñécar), ALSA og publisert linje 1-kart. Kontroller rutetider hos operatøren før avreise.</footer></main>
 <nav class="bottom" aria-label="Hovedmeny"><button data-page="home" class="active" onclick="navigate('home')"><b>⌂</b>Hjem</button><button data-page="lines" onclick="navigate('lines')"><b>🚌</b>Linjer</button><button data-page="search" onclick="navigate('search')"><b>🔎</b>Reisesøk</button><button data-page="prices" onclick="navigate('prices')"><b>€</b>Priser</button><button data-page="favorites" onclick="navigate('favorites')"><b>☆</b>Favoritter</button></nav>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
 const urban='https://urbanosalmunecar.es/';const lines=[{id:'1',name:'Sentrum – San Cristóbal – Cotobro',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/almunecar-circular-linea-1-invierno/'},{id:'2A',name:'Almuñécar – La Herradura',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/la-herradura-linea-2-invierno/'},{id:'2B',name:'Almuñécar – La Herradura – Punta de la Mona',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/la-herradura-linea-2-invierno/'},{id:'3A',name:'Velilla – Taramay',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/velilla-taramay-invierno/'},{id:'5',name:'Torrecuevas (linje 5 vinter / 4 sommer)',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/torrecuevas-linea-5-invierno/'},{id:'Nerja',name:'Almuñécar – Nerja',kind:'ALSA',url:'https://www.alsa.com/en/coach/almunecar-nerja'},{id:'Málaga',name:'Almuñécar – Málaga',kind:'ALSA',url:'https://www.alsa.com/'},{id:'Granada',name:'Almuñécar – Granada',kind:'ALSA',url:'https://www.alsa.com/'},{id:'Motril',name:'Almuñécar – Motril',kind:'ALSA',url:'https://www.alsa.com/'}];
@@ -19,6 +19,15 @@ const areas={
  '3A':['Almuñécar sentrum','Playa de Velilla','Taramay'],
  '5':['Almuñécar sentrum','Torrecuevas']
 };
+
+// Originale holdeplassdiagrammer fra operatørens vinterruter (ikke geografiske veikart).
+const officialSchematics={
+ '1':'https://urbanosalmunecar.es/wp-content/uploads/2022/09/ximage-8-1024x561.png.pagespeed.ic.fxdrGINLrv.webp',
+ '2A':'https://urbanosalmunecar.es/wp-content/uploads/2022/05/768x737ximage-3-1024x982.png.pagespeed.ic.8L3dzXwhGN.png',
+ '2B':'https://urbanosalmunecar.es/wp-content/uploads/2022/05/ximage-5.png.pagespeed.ic.WB_sGekTu-.png',
+ '3A':'https://urbanosalmunecar.es/wp-content/uploads/2022/05/ximage-7.png.pagespeed.ic.Pct4dMvc_v.png'
+};
+
 // OpenStreetMap: use documented route relations when available; never join unrelated roads.
 const routeRegions={
  '1':{label:'Cotobro / San Cristóbal',lat:36.7335,lon:-3.7020,radius:2800},
@@ -129,7 +138,12 @@ function openLine(id){
  document.getElementById('detailHead').innerHTML=`<span class="badge">${safe(l.kind)}</span><h2 style="margin-top:9px">Linje ${safe(l.id)}: ${safe(l.name)}</h2><button class="action light" onclick="toggleFav('${l.id}')">${saved.includes(l.id)?'★ Fjern favoritt':'☆ Lagre favoritt'}</button>`;
  let html='';
  if(l.kind==='Lokalbuss'){
- html+=`<h2>🗺️ Kart og holdeplasser</h2><p class="muted">Blå prikker er kartlagte holdeplasser i området, ikke nødvendigvis stopp på linjen. Grønne prikker er knyttet til en OSM-ruterelasjon. Rosa veistrekninger vises bare dersom en merket bussrute finnes i kartdata.</p><div id="routeMap" class="route-map" role="region" aria-label="Holdeplasskart"></div><div id="routeMapStatus" class="route-map-status">Laster kart…</div><div class="map-legend">Trykk på en prikk for navn og gangvei. Ingen rette linjer mellom holdeplasser tegnes. Kartdata er ikke offisielt verifisert.</div><div id="routeStops" class="stop-results"></div><button class="action light" onclick="showRouteMap(current)">↻ Oppdater holdeplasser</button>`;
+ html+=`<h2>🚏 Offisielle holdeplasser og kjøreretning</h2><p class="muted">Vinterrute 16. september–30. juni. Diagrammet er publisert av busselskapet og viser stopp i rekkefølge og retning. Det er <b>ikke</b> et geografisk veikart.</p>`;
+ if(officialSchematics[id])html+=`<a href="${officialSchematics[id]}" target="_blank" rel="noopener"><img src="${officialSchematics[id]}" alt="Offisielt holdeplassdiagram for linje ${id}" loading="lazy" style="width:100%;height:auto;border:1px solid #d5e4eb;border-radius:12px;background:#fff" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<p>Diagrammet kunne ikke lastes. Bruk lenken til busselskapet nedenfor.</p>')"></a>`;
+ else html+=`<p class="warning">Busselskapets rutediagram er ikke tilgjengelig som bilde her. Åpne den offisielle linjesiden nedenfor.</p>`;
+ if(id==='2B')html+=`<p class="warning"><b>Merk:</b> Marina del Este er merket med stjerne i busselskapets diagram og betjenes ikke på ordinær vinterrute. Se operatøren for avvik.</p>`;
+ if(id==='1')html+=`<p class="warning">Midlertidig omkjøring via Calle Guadix fra april 2026. Veikartet kan vise ordinær trasé.</p>`;
+ html+=`<details ontoggle="if(this.open &amp;&amp; !this.dataset.loaded){this.dataset.loaded='1';setTimeout(()=>showRouteMap(current),80)}" style="margin:16px 0"><summary style="cursor:pointer;font-weight:750;color:#07547a;padding:12px;background:#e8f2f6;border-radius:9px">🗺️ Åpne geografisk kart (kartlagte stopp – ikke verifisert for linjen)</summary><p class="muted">Dette kartet henter frivillige OpenStreetMap-data over nettet og kan mangle holdeplasser eller rute. Diagrammet over er den offisielle holdeplassoversikten.</p><div id="routeMap" class="route-map" role="region" aria-label="Geografisk kart"></div><div id="routeMapStatus" class="route-map-status">Trykk på «Hent kartdata» for å laste kartet.</div><div id="routeStops" class="stop-results"></div><button class="action light" onclick="showRouteMap(current)">↻ Hent kartdata</button></details>`;
  html+=`<p class="warning"><b>Offisielt rutekart:</b> Sjekk kjørevei, retning, holdeplasser og eventuelle avvik hos busselskapet. ${external(l.url,'Se offisielt rutekart og tider')}</p>`;
  if(id==='1')html+=`<iframe class="map" loading="lazy" title="Publisert linje 1-kart" src="https://www.google.com/maps/d/embed?mid=19WIkbQbOUD_ohMP90vEVLytbaILtH1bw"></iframe>${external('https://www.google.com/maps/d/viewer?mid=19WIkbQbOUD_ohMP90vEVLytbaILtH1bw','Åpne publisert linje 1-kart')}<div class="warning">Omkjøring via Calle Guadix er meldt av operatøren. Kartet kan vise ordinær trasé.</div>`;
  else html+=`<div class="warning">Detaljert holdeplassliste og GPS-posisjoner for denne linjen er ikke verifisert. Punktene nedenfor er <b>områder langs forbindelsen</b>, ikke en komplett holdeplassliste. Ingen oppdiktet trasé tegnes.</div>`;
@@ -141,7 +155,7 @@ function openLine(id){
  html+=`<h2>💶 Billettpriser</h2><div class="pricegrid"><div><small>Enkelt</small><strong>1 €</strong></div><div><small>10 turer</small><strong>8 €</strong></div><div><small>40 turer</small><strong>30 €</strong></div><div><small>30 dager</small><strong>41 €</strong></div></div><p class="muted">Reisekort: 4 € depositum ved utstedelse.</p>`;
  }else html+=`<h2>🗺️ Reiseinformasjon</h2><p>ALSA har egne holdeplasser, avgangstider og priser. Åpne ALSA for dagens rute.</p><p class="muted">Prisen varierer etter avgang og reisemål.</p>`;
  html+=`<h2>📅 Offisiell rutetabell</h2>${external(l.url,'Se oppdaterte avganger')}`;
- document.getElementById('detailBody').innerHTML=html;navigate('detail');if(l.kind==='Lokalbuss')showRouteMap(id);if(id==='1')showTimes(false)
+ document.getElementById('detailBody').innerHTML=html;navigate('detail');if(id==='1')showTimes(false)
 }
 function showTimes(s){document.getElementById('workday').classList.toggle('on',!s);document.getElementById('holiday').classList.toggle('on',s);document.getElementById('times').innerHTML=(s?['08:30','10:30','12:45','16:30','18:45']:['08:30','09:30','10:00','11:00','11:30','12:00','12:30','13:00','14:00','17:00','18:00','19:00','20:00']).map(x=>`<span>${x}</span>`).join('')}
 
