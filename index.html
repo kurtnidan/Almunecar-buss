@@ -1,16 +1,16 @@
-<!doctype html><html lang="no"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07547a"><title>Almuñécar Buss</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png" type="image/png"><link rel="apple-touch-icon" href="icon-192.png"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><style>
+<!doctype html><html lang="no"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07547a"><title>Almuñécar Buss</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png" type="image/png"><link rel="apple-touch-icon" href="icon-192.png"><style>
 :root{font-family:system-ui,-apple-system,Arial,sans-serif;color:#18354a;background:#f1f6f8}*{box-sizing:border-box}body{margin:0;padding-bottom:84px}header{background:linear-gradient(120deg,#07547a,#09819a);color:white;padding:20px 17px 25px}header h1{font-size:26px;margin:0 0 4px}header p{margin:0;opacity:.92;font-size:14px}.shell{max-width:760px;margin:auto;padding:14px}.hero{background:white;border-radius:18px;padding:18px;box-shadow:0 4px 20px #1234;margin-top:-27px;position:relative}.hero h2{margin:0 0 6px;font-size:21px}.muted{color:#597082;font-size:13px}.quick{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:13px 0}.quick button{background:#e9f4f8;color:#07547a;border:0;border-radius:13px;padding:17px 8px;font-size:15px;font-weight:750;text-align:center}.quick button span{display:block;font-size:25px;margin-bottom:5px}.card{background:white;border-radius:17px;padding:16px;margin:13px 0;box-shadow:0 2px 10px #1630470e}.card h2{font-size:19px;margin:0 0 10px}.line{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #e6edf0}.line:last-child{border:0}.pill{background:#07547a;color:white;border-radius:12px;padding:10px;min-width:54px;text-align:center;font-weight:800}.line .info{flex:1;min-width:0}.line .info strong{display:block}.line .info small{display:block;color:#61798a;margin-top:4px}.arrow{font-size:23px;color:#08739c}button,a.btn{cursor:pointer;font:inherit}.action{border:0;border-radius:11px;background:#075d84;color:white;padding:11px 13px;font-weight:700;display:inline-block;text-decoration:none;margin:4px 4px 4px 0}.light{background:#e8f2f6;color:#07547a}.warning{background:#fff4dd;border-left:4px solid #d99a20;padding:12px;border-radius:8px;font-size:14px;margin:12px 0}.good{background:#e7f6f0;padding:10px;border-radius:10px;font-size:13px}.pricegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.pricegrid div{background:#eaf4f8;border-radius:12px;padding:13px}.pricegrid small{display:block;color:#526d7e}.pricegrid strong{display:block;font-size:24px;color:#07547a;margin-top:5px}.stopbutton{border:0;background:transparent;text-align:left;font:inherit;color:#075d84;font-weight:650;text-decoration:underline;text-underline-offset:3px;padding:4px 0}.map{width:100%;height:370px;border:0;border-radius:12px;background:#e9eff1}.stops{padding:0;list-style:none}.stops li{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid #edf1f4}.stopnum{border-radius:50%;width:29px;height:29px;display:grid;place-items:center;background:#e5f3f8;color:#07547a;flex-shrink:0;font-weight:700;font-size:12px}.inactive{color:#8996a0;text-decoration:line-through}.times{display:flex;gap:7px;flex-wrap:wrap}.times span{background:#e9f4f9;border-radius:8px;padding:8px 10px;font-weight:700}.switch{display:flex;gap:8px;margin:12px 0}.switch button{flex:1;padding:11px;border:1px solid #bfd3dd;border-radius:9px;background:white;color:#07547a;font-weight:700}.switch button.on{background:#07547a;color:white}.hidden{display:none!important}input,select{width:100%;padding:13px;border:1px solid #c8d8e1;border-radius:10px;font:inherit;background:white;margin:6px 0 10px}label{font-weight:700;font-size:14px}.bottom{position:fixed;bottom:0;left:0;right:0;display:flex;background:white;border-top:1px solid #dbe6ec;box-shadow:0 -3px 15px #0001;padding-bottom:env(safe-area-inset-bottom);z-index:20}.bottom button{flex:1;border:0;background:white;color:#506c7b;padding:10px 2px;font-size:11px}.bottom button b{display:block;font-size:21px}.bottom button.active{color:#075d84;font-weight:800}button:focus-visible,a:focus-visible{outline:3px solid orange} .badge{display:inline-block;background:#eaf4f8;color:#07547a;border-radius:20px;padding:5px 9px;font-size:12px;font-weight:750}footer{font-size:12px;color:#687b89;padding:15px 0;text-align:center}@media(min-width:600px){.quick{grid-template-columns:repeat(4,1fr)}}
 
 .route-map{height:430px;border-radius:14px;z-index:0;background:#e6eff3}.route-map-status{padding:9px 0;color:#526d7e;font-size:14px}.stop-results{max-height:280px;overflow:auto}.stop-results button{display:block;width:100%;text-align:left;background:#eef7fa;border:0;border-radius:8px;padding:10px;margin:6px 0;color:#07547a}.map-legend{font-size:13px;color:#526d7e;margin:8px 0}
 </style></head><body><header><h1>🚌 Almuñécar Buss</h1><p>Lokalbusser • Cotobro • La Herradura • ALSA</p></header><main class="shell">
-<section id="home" class="page"><div class="hero"><h2>Hvor vil du reise?</h2><p class="muted">Velg en busslinje eller finn en forbindelse.</p><div class="quick"><button onclick="openLine('1')"><span>🏖️</span>Cotobro</button><button onclick="openLine('2A')"><span>🌊</span>La Herradura</button><button onclick="navigate('lines')"><span>🚏</span>Alle linjer</button><button onclick="navigate('search')"><span>🔎</span>Finn buss</button></div></div><div class="card"><h2>📍 Min posisjon og nærmeste busstopp</h2><p class="muted">Finn GPS-posisjonen din og søk etter registrerte bussholdeplasser i nærheten.</p><button class="action" onclick="findNearestStop()">📍 Min posisjon</button><div id="gpsStatus" class="muted" role="status" aria-live="polite">Posisjonen deles bare når du trykker på knappen.</div><div id="gpsResult"></div><iframe id="gpsMap" class="map hidden" loading="lazy" title="Kart over min posisjon og holdeplasser"></iframe></div><div class="card"><h2>⭐ Mine favoritter</h2><div id="homeFaves" class="muted">Trykk ☆ på en linje for å lagre den her.</div></div><div class="card"><h2>💶 Billettpriser</h2><div class="pricegrid"><div><small>Enkelt</small><strong>1 €</strong></div><div><small>10 turer</small><strong>8 €</strong></div><div><small>40 turer</small><strong>30 €</strong></div><div><small>30 dager</small><strong>41 €</strong></div></div><p class="muted">+ 4 € depositum ved nytt reisekort.</p><button class="action light" onclick="navigate('prices')">Alle priser</button></div><div class="card"><h2>Rask tilgang</h2><button class="action" onclick="openLine('1')">Linje 1 – kart og tider</button><a class="action light" href="https://urbanosalmunecar.es/" target="_blank" rel="noopener">Offisielle lokalbusser ↗</a><a class="action light" href="https://www.alsa.com/" target="_blank" rel="noopener">ALSA ↗</a></div><div class="warning"><b>Om rutetidene:</b> Linje 1 har publiserte avgangstider i appen. Alle fem lokalruter har egne sider med kartlenker og offisielle vintertabeller. Appen har ikke sanntidsdata.</div></section>
+<section id="home" class="page"><div class="hero"><h2>Hvor vil du reise?</h2><p class="muted">Velg en busslinje eller finn en forbindelse.</p><div class="quick"><button onclick="openLine('1')"><span>🏖️</span>Cotobro</button><button onclick="openLine('2A')"><span>🌊</span>La Herradura</button><button onclick="navigate('lines')"><span>🚏</span>Alle linjer</button><button onclick="navigate('search')"><span>🔎</span>Finn buss</button></div></div><div class="card"><h2>📍 Min posisjon og nærmeste busstopp</h2><p class="muted">Finn GPS-posisjonen din og søk etter registrerte bussholdeplasser i nærheten.</p><button class="action" onclick="findNearestStop()">📍 Min posisjon</button><div id="gpsStatus" class="muted" role="status" aria-live="polite">Posisjonen deles bare når du trykker på knappen.</div><div id="gpsResult"></div><iframe id="gpsMap" class="map hidden" loading="lazy" title="Kart over min posisjon og holdeplasser"></iframe></div><div class="card"><h2>⭐ Mine favoritter</h2><div id="homeFaves" class="muted">Trykk ☆ på en linje for å lagre den her.</div></div><div class="card"><h2>💶 Billettpriser</h2><div class="pricegrid"><div><small>Enkelt</small><strong>1 €</strong></div><div><small>10 turer</small><strong>8 €</strong></div><div><small>40 turer</small><strong>30 €</strong></div><div><small>30 dager</small><strong>41 €</strong></div></div><p class="muted">+ 4 € depositum ved nytt reisekort.</p><button class="action light" onclick="navigate('prices')">Alle priser</button></div><div class="card"><h2>Rask tilgang</h2><button class="action" onclick="openLine('1')">Linje 1 – kart og tider</button><a class="action light" href="https://urbanosalmunecar.es/" target="_blank" rel="noopener">Offisielle lokalbusser ↗</a><a class="action light" href="https://www.alsa.com/" target="_blank" rel="noopener">ALSA ↗</a></div><div class="warning"><b>Om rutetidene:</b> Linje 1 har publiserte avgangstider i appen. Alle fem lokalruter har egne sider med offisielle vintertabeller. Publiserte geografiske kart finnes for alle fem lokalruter, men kan være utdaterte eller ufullstendige. Appen har ikke sanntidsdata.</div></section>
 <section id="prices" class="page hidden"><div class="card"><h2>💶 Billettpriser – lokalbusser</h2><div class="pricegrid"><div><small>Enkeltbillett</small><strong>1 €</strong></div><div><small>10 turer</small><strong>8 €</strong></div><div><small>40 turer</small><strong>30 €</strong></div><div><small>30 dager</small><strong>41 €</strong></div></div><p class="muted">Reisekort: 4 € depositum ved utstedelse. ALSA har egne priser, som avhenger av reisen.</p><a class="action" target="_blank" rel="noopener" href="https://urbanosalmunecar.es/lineas-urbanas-almunecar/almunecar-circular-linea-1-invierno/">Se priser hos busselskapet ↗</a></div></section><section id="lines" class="page hidden"><div class="card"><h2>Alle busslinjer</h2><label for="filter">Søk linje eller reisemål</label><input id="filter" placeholder="F.eks. Cotobro, Nerja, 2A" oninput="renderLines()"><div id="linesList"></div></div></section>
 <section id="detail" class="page hidden"><button class="action light" onclick="navigate('lines')">← Alle linjer</button><div class="card"><div id="detailHead"></div><div id="detailBody"></div></div></section>
 <section id="search" class="page hidden"><div class="card"><h2>🔎 Finn buss</h2><p class="muted">Enkel forbindelseoversikt, ikke en reiseplanlegger med live avganger eller bytter.</p><label for="origin">Fra</label><select id="origin"><option>Almuñécar sentrum</option><option>San Cristóbal</option><option>Cotobro</option><option>La Herradura</option><option>Velilla</option><option>Taramay</option><option>Torrecuevas</option></select><label for="destination">Til</label><select id="destination"><option>Cotobro</option><option>Almuñécar sentrum</option><option>San Cristóbal</option><option>La Herradura</option><option>Velilla</option><option>Taramay</option><option>Torrecuevas</option><option>Nerja</option><option>Málaga</option><option>Granada</option><option>Motril</option></select><button class="action" onclick="findRoute()">Finn forbindelse</button><div id="routeResult"></div></div></section>
 <section id="favorites" class="page hidden"><div class="card"><h2>⭐ Lagrede linjer</h2><div id="favesList"></div></div></section>
 <footer>Kilder: Operatørens offisielle vinterdiagrammer (Urbanos Almuñécar), ALSA og publisert linje 1-kart. Kontroller rutetider hos operatøren før avreise.</footer></main>
 <nav class="bottom" aria-label="Hovedmeny"><button data-page="home" class="active" onclick="navigate('home')"><b>⌂</b>Hjem</button><button data-page="lines" onclick="navigate('lines')"><b>🚌</b>Linjer</button><button data-page="search" onclick="navigate('search')"><b>🔎</b>Reisesøk</button><button data-page="prices" onclick="navigate('prices')"><b>€</b>Priser</button><button data-page="favorites" onclick="navigate('favorites')"><b>☆</b>Favoritter</button></nav>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+<script>
 const urban='https://urbanosalmunecar.es/';const lines=[{id:'1',name:'Sentrum – San Cristóbal – Cotobro',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/almunecar-circular-linea-1-invierno/'},{id:'2A',name:'Almuñécar – La Herradura',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/la-herradura-linea-2-invierno/'},{id:'2B',name:'Almuñécar – La Herradura – Punta de la Mona',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/la-herradura-linea-2-invierno/'},{id:'3A',name:'Velilla – Taramay',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/velilla-taramay-invierno/'},{id:'5',name:'Torrecuevas (linje 5 vinter / 4 sommer)',kind:'Lokalbuss',url:urban+'lineas-urbanas-almunecar/torrecuevas-linea-5-invierno/'},{id:'Nerja',name:'Almuñécar – Nerja',kind:'ALSA',url:'https://www.alsa.com/en/coach/almunecar-nerja'},{id:'Málaga',name:'Almuñécar – Málaga',kind:'ALSA',url:'https://www.alsa.com/'},{id:'Granada',name:'Almuñécar – Granada',kind:'ALSA',url:'https://www.alsa.com/'},{id:'Motril',name:'Almuñécar – Motril',kind:'ALSA',url:'https://www.alsa.com/'}];
 const stops=['Plaza de la Carrera','Plaza de Madrid','Paseo del Altillo','Peñón del Santo','Hotel Almuñécar Playa','Hotel Helios','Mar del Sol','Chinasol','Rinconcillo Jr / Rincón de la China','Los Ramos','Hotel Cotobro / Playa de Cotobro','Los Ramos (retur)','Rincón de la China (retur)','Chinasol (retur)','Los Marinos','Puente de Noy 1','Puente de Noy 2','Costa Banana (retur)','Albaicín del Mar (retur)','Avenida Costa del Sol (retur)','Plaza de la Carrera'];
 const areas={
@@ -28,107 +28,8 @@ const officialSchematics={
  '3A':'https://urbanosalmunecar.es/wp-content/uploads/2022/05/ximage-7.png.pagespeed.ic.Pct4dMvc_v.png'
 };
 
-// OpenStreetMap: use documented route relations when available; never join unrelated roads.
-const routeRegions={
- '1':{label:'Cotobro / San Cristóbal',lat:36.7335,lon:-3.7020,radius:2800},
- '2A':{label:'Almuñécar / La Herradura',lat:36.7335,lon:-3.7210,radius:5100},
- '2B':{label:'Almuñécar / Punta de la Mona',lat:36.7335,lon:-3.7210,radius:5100},
- '3A':{label:'Velilla / Taramay',lat:36.7410,lon:-3.6675,radius:2700},
- '5':{label:'Torrecuevas',lat:36.7500,lon:-3.6890,radius:3000}
-};
-let activeRouteMap=null,routeRequest=0;
-function directionsTo(lat,lon){return 'https://www.google.com/maps/dir/?api=1&destination='+lat+','+lon+'&travelmode=walking'}
-const osmServers=['https://overpass.private.coffee/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.nchc.org.tw/api/interpreter'];
-async function osmFetch(query){
- let last;
- for(const endpoint of osmServers){
-  const c=new AbortController(),timer=setTimeout(()=>c.abort(),13000);
-  try{
-   const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(query),signal:c.signal});
-   if(!response.ok)throw Error('HTTP '+response.status);
-   const data=await response.json();
-   if(!Array.isArray(data.elements))throw Error('Ugyldig kartdata');
-   return data.elements;
-  }catch(e){last=e}finally{clearTimeout(timer)}
- }
- throw last||Error('Ingen karttjeneste tilgjengelig');
-}
-async function showRouteMap(id){
- const region=routeRegions[id],el=document.getElementById('routeMap'),status=document.getElementById('routeMapStatus'),list=document.getElementById('routeStops');
- if(!region||!el)return;
- const request=++routeRequest;
- if(activeRouteMap){activeRouteMap.remove();activeRouteMap=null}
- if(typeof L==='undefined'){status.textContent='Kartbiblioteket kunne ikke lastes. Sjekk internettforbindelsen.';return}
- const map=L.map(el,{scrollWheelZoom:false}).setView([region.lat,region.lon],12);
- activeRouteMap=map;
- L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);
- setTimeout(()=>{if(request===routeRequest)map.invalidateSize()},150);
- status.textContent='Søker etter bussholdeplasser og registrert bussrute …';
- list.innerHTML='';
- const query='[out:json][timeout:20];(node["highway"="bus_stop"](around:'+region.radius+','+region.lat+','+region.lon+');node["public_transport"="platform"](around:'+region.radius+','+region.lat+','+region.lon+'););out body;';
- const routeQuery='[out:json][timeout:20];relation["type"="route"]["route"="bus"](around:'+region.radius+','+region.lat+','+region.lon+');out tags geom;';
- const bounds=[];
- let matchedStops=new Set();
- try{
-  const routes=await osmFetch(routeQuery);
-  if(request!==routeRequest)return;
-  const matching=routes.filter(r=>{
-   const tags=r.tags||{},refs=(tags.ref||'').split(/[;, ]+/),name=(tags.name||'').toLowerCase();
-   return refs.includes(id)||(id==='5'&&refs.includes('4'))||(!tags.ref&&name.includes('línea '+id));
-  });
-  let roadCount=0;
-  for(const route of matching){
-   const members=route.members||[];
-   for(const member of members){
-    if(member.type==='node'&&/stop|platform/i.test(member.role||''))matchedStops.add(member.ref);
-    if(member.type!=='way'||!Array.isArray(member.geometry)||member.geometry.length<2)continue;
-    const coords=member.geometry.filter(p=>Number.isFinite(p.lat)&&Number.isFinite(p.lon)).map(p=>[p.lat,p.lon]);
-    if(coords.length<2)continue;
-    L.polyline(coords,{color:'#d32952',weight:5,opacity:.9}).addTo(map);
-    roadCount++;
-    bounds.push(...coords);
-   }
-  }
-  if(roadCount)status.textContent='Rosa veistrekninger er hentet fra '+matching.length+' OpenStreetMap-ruter merket '+id+'. Kjøreretning og fullstendighet er ikke verifisert mot operatøren.';
-  else status.textContent='Ingen dokumentert veitrase for denne linjen funnet i åpne kartdata. Viser registrerte holdeplasser der de finnes.';
- }catch(e){
-  if(request!==routeRequest)return;
-  status.textContent='Kunne ikke hente registrert busstrase. Prøver å hente holdeplasser.';
- }
- try{
-  const elements=await osmFetch(query);
-  if(request!==routeRequest)return;
-  const unique=new Map();
-  for(const x of elements){
-   if(!Number.isFinite(x.lat)||!Number.isFinite(x.lon))continue;
-   const key=x.lat.toFixed(5)+','+x.lon.toFixed(5);
-   if(!unique.has(key))unique.set(key,x);
-  }
-  const stops=[...unique.values()].sort((a,b)=>distanceMeters(region.lat,region.lon,a.lat,a.lon)-distanceMeters(region.lat,region.lon,b.lat,b.lon));
-  stops.forEach((stop,i)=>{
-   const name=stop.tags?.name||stop.tags?.['name:es']||'Bussholdeplass uten navn';
-   const confirmed=matchedStops.has(stop.id);
-   const marker=L.circleMarker([stop.lat,stop.lon],{radius:confirmed?9:7,color:'#fff',weight:2,fillColor:confirmed?'#0b865a':'#087cbb',fillOpacity:1}).addTo(map);
-   const link=directionsTo(stop.lat,stop.lon);
-   marker.bindPopup('<b>'+safe(name)+'</b><br><small>'+(confirmed?'Tilknyttet OSM-ruterelasjon – ikke kontrollert mot operatøren':'Kartlagt stopp i området – ikke bekreftet for denne linjen')+'</small><br><a target="_blank" rel="noopener" href="'+link+'">Gå hit i Google Maps ↗</a>');
-   bounds.push([stop.lat,stop.lon]);
-   if(i<100){
-    const btn=document.createElement('button');
-    btn.textContent=(confirmed?'● ':'○ ')+name;
-    btn.addEventListener('click',()=>{map.setView([stop.lat,stop.lon],16);marker.openPopup();el.scrollIntoView({behavior:'smooth',block:'center'})});
-    list.appendChild(btn);
-   }
-  });
-  status.textContent+=' '+stops.length+' kartlagte holdeplasser i søkeområdet.';
-  if(!stops.length)list.textContent='Ingen holdeplasser funnet i kartdatabasen for dette området.';
-  if(bounds.length)map.fitBounds(bounds,{padding:[20,20],maxZoom:13});
- }catch(e){
-  if(request!==routeRequest)return;
-  status.textContent+=' Holdeplassdata kunne ikke lastes fra karttjenestene. Bruk operatørens offisielle rutekart nedenfor.';
-  list.innerHTML='<p class="warning">Karttjenestene svarte ikke. Dette betyr ikke at ruten mangler holdeplasser.</p>';
-  if(bounds.length)map.fitBounds(bounds,{padding:[20,20],maxZoom:13});
- }
-}
+// Approximate map centers only, not stop or route coordinates.
+const routeRegions={'1':{label:'Cotobro',lat:36.7335,lon:-3.7020},'2A':{label:'La Herradura',lat:36.7335,lon:-3.7210},'2B':{label:'Punta de la Mona',lat:36.7335,lon:-3.7210},'3A':{label:'Velilla Taramay',lat:36.7410,lon:-3.6675},'5':{label:'Torrecuevas',lat:36.7500,lon:-3.6890}};
 function mapsSearch(place){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(place+', Almuñécar, Granada, España')}
 function stopLink(place){return `<button class="stopbutton" onclick="showStop(${JSON.stringify(place).replace(/"/g,'&quot;')})">📍 ${safe(place)} · vis på kart ↗</button>`}
 function showStop(place){const url=mapsSearch(place);document.getElementById('stopMap').src='https://maps.google.com/maps?q='+encodeURIComponent(place+', Almuñécar, Granada, España')+'&output=embed';document.getElementById('stopTitle').textContent='Kartoppslag: '+place;document.getElementById('stopDirect').href=url;document.getElementById('stopMapArea').classList.remove('hidden');document.getElementById('stopMapArea').scrollIntoView({behavior:'smooth',block:'start'})}
@@ -143,8 +44,11 @@ function openLine(id){
  else html+=`<p class="warning">Busselskapets rutediagram er ikke tilgjengelig som bilde her. Åpne den offisielle linjesiden nedenfor.</p>`;
  if(id==='2B')html+=`<p class="warning"><b>Merk:</b> Marina del Este er merket med stjerne i busselskapets diagram og betjenes ikke på ordinær vinterrute. Se operatøren for avvik.</p>`;
  if(id==='1')html+=`<p class="warning">Midlertidig omkjøring via Calle Guadix fra april 2026. Veikartet kan vise ordinær trasé.</p>`;
- html+=`<details ontoggle="if(this.open &amp;&amp; !this.dataset.loaded){this.dataset.loaded='1';setTimeout(()=>showRouteMap(current),80)}" style="margin:16px 0"><summary style="cursor:pointer;font-weight:750;color:#07547a;padding:12px;background:#e8f2f6;border-radius:9px">🗺️ Åpne geografisk kart (kartlagte stopp – ikke verifisert for linjen)</summary><p class="muted">Dette kartet henter frivillige OpenStreetMap-data over nettet og kan mangle holdeplasser eller rute. Diagrammet over er den offisielle holdeplassoversikten.</p><div id="routeMap" class="route-map" role="region" aria-label="Geografisk kart"></div><div id="routeMapStatus" class="route-map-status">Trykk på «Hent kartdata» for å laste kartet.</div><div id="routeStops" class="stop-results"></div><button class="action light" onclick="showRouteMap(current)">↻ Hent kartdata</button></details>`;
+ html+=`<div class="card" style="background:#f2f8fa;box-shadow:none"><h2>📍 Geografisk oversikt</h2><p>Se området og veiene i et vanlig kart. <b>Dette er ikke en bekreftet bussrute:</b> vi har ikke sikre GPS-data for holdeplassene og kjøretraseen.</p><a class="action" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('parada autobus '+(routeRegions[id]?.label||'Almuñécar'))}">Finn bussholdeplasser på kart ↗</a><a class="action light" target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat=${routeRegions[id]?.lat||36.735}&mlon=${routeRegions[id]?.lon||-3.69}#map=13/${routeRegions[id]?.lat||36.735}/${routeRegions[id]?.lon||-3.69}">Åpne veikart ↗</a></div>`;
  html+=`<p class="warning"><b>Offisielt rutekart:</b> Sjekk kjørevei, retning, holdeplasser og eventuelle avvik hos busselskapet. ${external(l.url,'Se offisielt rutekart og tider')}</p>`;
+ if(id==='2A'||id==='2B')html+=`<h2>🗺️ Publisert geografisk kart for linje 2</h2><p class="muted">Dette er et eksisterende kart over forbindelsen Almuñécar–La Herradura. Det er ikke dokumentert at kartet dekker alle stopp eller avstikkere for ${id}, særlig Punta de la Mona og Marina del Este på 2B. Bruk holdeplassdiagrammet over for riktig stopp og kjøreretning.</p><iframe class="map" loading="lazy" title="Publisert kart over busslinje 2" src="https://www.google.com/maps/d/embed?mid=1U1ouSu1GfIugPUc5XP43fUFPE6ya6mr4"></iframe>${external('https://www.google.com/maps/d/viewer?mid=1U1ouSu1GfIugPUc5XP43fUFPE6ya6mr4','Åpne linje 2-kart i Google Maps')}`;
+ if(id==='3A')html+=`<h2>🗺️ Publisert geografisk kart for linje 3 – Velilla og Taramay</h2><p class="muted">Kartet er publisert av en uavhengig lokal kilde. Kontroller retning, stopp og eventuelle avvik mot busselskapets diagram over.</p><iframe class="map" loading="lazy" title="Publisert kart over linje 3 Velilla Taramay" src="https://www.google.com/maps/d/embed?mid=1QCrdmBDevqg_DErkIucCcAHeFBAusxLQ"></iframe>${external('https://www.google.com/maps/d/viewer?mid=1QCrdmBDevqg_DErkIucCcAHeFBAusxLQ','Åpne linje 3-kart i Google Maps')}`;
+ if(id==='5')html+=`<h2>🗺️ Publisert geografisk kart for linje 5 – Torrecuevas</h2><p class="muted">Kartet er publisert av en uavhengig lokal kilde. Kontroller retning, stopp og eventuelle avvik mot busselskapets diagram over.</p><iframe class="map" loading="lazy" title="Publisert kart over linje 5 Torrecuevas" src="https://www.google.com/maps/d/embed?mid=154mrAp5ZMGLgC4ZJdL6xjoGbZ7EFbQNi"></iframe>${external('https://www.google.com/maps/d/viewer?mid=154mrAp5ZMGLgC4ZJdL6xjoGbZ7EFbQNi','Åpne linje 5-kart i Google Maps')}`;
  if(id==='1')html+=`<iframe class="map" loading="lazy" title="Publisert linje 1-kart" src="https://www.google.com/maps/d/embed?mid=19WIkbQbOUD_ohMP90vEVLytbaILtH1bw"></iframe>${external('https://www.google.com/maps/d/viewer?mid=19WIkbQbOUD_ohMP90vEVLytbaILtH1bw','Åpne publisert linje 1-kart')}<div class="warning">Omkjøring via Calle Guadix er meldt av operatøren. Kartet kan vise ordinær trasé.</div>`;
  else html+=`<div class="warning">Detaljert holdeplassliste og GPS-posisjoner for denne linjen er ikke verifisert. Punktene nedenfor er <b>områder langs forbindelsen</b>, ikke en komplett holdeplassliste. Ingen oppdiktet trasé tegnes.</div>`;
  const entries=id==='1'?stops:areas[id]||[];
